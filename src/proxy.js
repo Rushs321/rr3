@@ -21,7 +21,7 @@ function randomVia() {
 }
 
 export async function processRequest(request, reply) {
-    const { url, jpeg, bw, l } = request.query;
+    let url = request.query.url;
 
     if (!url) {
         const ipAddress = generateRandomIP();
@@ -38,13 +38,11 @@ export async function processRequest(request, reply) {
         return reply.send(`bandwidth-hero-proxy`);
     }
 
-    const urlList = Array.isArray(url) ? url.join('&url=') : url;
-    const cleanUrl = urlList.replace(/http:\/\/1\.1\.\d\.\d\/bmi\/(https?:\/\/)?/i, 'http://');
 
-    request.params.url = cleanUrl;
-    request.params.webp = !jpeg;
-    request.params.grayscale = bw !== '0';
-    request.params.quality = parseInt(l, 10) || 40;
+    request.params.url = decodeURIComponent(url);
+    request.params.webp = !request.query.jpeg;
+    request.params.grayscale = request.query.bw != '0';
+    request.params.quality = parseInt(request.query.l, 10) || 40;
 
     const randomIP = generateRandomIP();
     const userAgent = randomUserAgent();
@@ -60,7 +58,7 @@ export async function processRequest(request, reply) {
             },
             timeout: 10000,
             follow: 5, // max redirects
-            compress: true,
+            compress: false,
         });
 
         if (!response.ok) {
@@ -70,7 +68,7 @@ export async function processRequest(request, reply) {
         copyHdrs(response, reply);
         reply.header('content-encoding', 'identity');
         request.params.originType = response.headers.get('content-type') || '';
-        request.params.originSize = parseInt(response.headers.get('content-length'), 10) || 0;
+        request.params.originSize = response.headers.get('content-length'), 10 || 0;
 
         const input = { body: response.body }; // Wrap the stream in an object
 
