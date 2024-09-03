@@ -3,13 +3,14 @@ import sharp from 'sharp';
 import { redirect } from './redirect.js';
 
 export async function compressImg(request, reply, input) {
-    const imgFormat = request.params.webp ? 'webp' : 'jpeg';
+    const { webp, grayscale, quality, originSize } = request.params;
+    const imgFormat = webp ? 'webp' : 'jpeg';
 
     try {
         const sharpInstance = sharp()
-            .grayscale(request.params.grayscale)
+            .grayscale(grayscale)
             .toFormat(imgFormat, {
-                quality: request.params.quality,
+                quality,
                 progressive: true,
                 optimizeScans: true,
                 chromaSubsampling: '4:4:4'
@@ -21,10 +22,10 @@ export async function compressImg(request, reply, input) {
         const { data, info } = await sharpInstance.toBuffer({ resolveWithObject: true });
 
         reply
-            .header('content-type', 'image/' + format)
+            .header('content-type', `image/${imgFormat}`)
             .header('content-length', info.size)
-            .header('x-original-size', request.params.originSize)
-            .header('x-bytes-saved', request.params.originSize - info.size)
+            .header('x-original-size', originSize)
+            .header('x-bytes-saved', originSize - info.size)
             .code(200)
             .send(data);
     } catch (error) {
