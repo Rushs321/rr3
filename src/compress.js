@@ -22,7 +22,7 @@ export async function compressImg(request, reply, input) {
         const { data, info } = await sharpInstance.toBuffer({ resolveWithObject: true });
 
         reply
-            .header('content-type', `image/${imgFormat}`)
+            .header('content-type', 'image/' + format)
             .header('content-length', info.size)
             .header('x-original-size', originSize)
             .header('x-bytes-saved', originSize - info.size)
