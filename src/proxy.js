@@ -22,15 +22,17 @@ function randomVia() {
 
 export async function processRequest(request, reply) {
     let url = request.query.url;
+    const randomIP = generateRandomIP();
+    const userAgent = randomUserAgent();
+    const vid = randomVia();
 
     if (!url) {
-        const ipAddress = generateRandomIP();
-        const ua = randomUserAgent();
+        
         const hdrs = {
             ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
-            'x-forwarded-for': ipAddress,
-            'user-agent': ua,
-            'via': randomVia(),
+            'x-forwarded-for': randomIP,
+            'user-agent': userAgent,
+            'via': vid,
         };
 
         Object.entries(hdrs).forEach(([key, value]) => reply.header(key, value));
@@ -44,8 +46,7 @@ export async function processRequest(request, reply) {
     request.params.grayscale = request.query.bw != '0';
     request.params.quality = parseInt(request.query.l, 10) || 40;
 
-    const randomIP = generateRandomIP();
-    const userAgent = randomUserAgent();
+    
 
     try {
         const response = await fetch(request.params.url, {
@@ -54,7 +55,7 @@ export async function processRequest(request, reply) {
                 ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
                 'user-agent': userAgent,
                 'x-forwarded-for': randomIP,
-                'via': randomVia(),
+                'via': vid,
             },
             timeout: 10000,
             follow: 5, // max redirects
