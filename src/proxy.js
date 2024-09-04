@@ -22,8 +22,7 @@ function randomVia() {
 
 export async function processRequest(request, reply) {
     let url = request.query.url;
-     request.ip = generateRandomIP();
-    const randomIP = request.ip;
+    const randomIP = generateRandomIP();
     const userAgent = randomUserAgent();
     const vid = randomVia();
 
@@ -31,7 +30,8 @@ export async function processRequest(request, reply) {
         
         const hdrs = {
             ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
-            'x-forwarded-for': request.ip,
+            'request.ip' : randomIP,
+            'x-forwarded-for': randomIP,
             'user-agent': userAgent,
             'via': vid,
         };
@@ -54,9 +54,10 @@ export async function processRequest(request, reply) {
             method: "GET",
             headers: {
                 ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
-                'user-agent': userAgent,
-                'x-forwarded-for': randomIP,
-                'via': vid,
+                'request.ip' : randomIP,
+               'x-forwarded-for': randomIP,
+               'user-agent': userAgent,
+               'via': vid,
             },
             timeout: 10000,
             follow: 5, // max redirects
