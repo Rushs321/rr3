@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-// Set environment variable programmatically
-process.env.NO_ANIMATE = "true";
-
 import fastify from 'fastify';
 import { processRequest } from './src/proxy.js'; // Import the named export
 
