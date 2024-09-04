@@ -8,9 +8,7 @@ import fastify from 'fastify';
 import { processRequest } from './src/proxy.js'; // Import the named export
 
 const app = fastify({ 
-  logger: true,
-  disableRequestLogging: true,
-  trustProxy: true // Enable trust proxy
+  logger: true
 });
 
 const PORT = process.env.PORT || 8080;
