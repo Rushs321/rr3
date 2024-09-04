@@ -30,7 +30,6 @@ export async function processRequest(request, reply) {
         
         const hdrs = {
             ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
-            'request.ip' : randomIP,
             'x-forwarded-for': randomIP,
             'user-agent': userAgent,
             'via': vid,
@@ -54,7 +53,6 @@ export async function processRequest(request, reply) {
             method: "GET",
             headers: {
                 ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
-                'request.ip' : randomIP,
                'x-forwarded-for': randomIP,
                'user-agent': userAgent,
                'via': vid,
