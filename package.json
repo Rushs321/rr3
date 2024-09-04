@@ -10,7 +10,7 @@
   "dependencies": {
     "fastify": "^4.28.1",
     "node-fetch": "^3.3.2",
-    "lodash": "^4.17.21",
+    "lodash.pick": "^4.4.0",
     "sharp": "^0.33.5"
   },
   "engines": {
