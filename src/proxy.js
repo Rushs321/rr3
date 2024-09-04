@@ -1,6 +1,6 @@
 "use strict";
 import fetch from 'node-fetch';
-import pick from 'lodash.pick';
+import lodash from 'lodash';
 import { generateRandomIP, randomUserAgent } from './utils.js';
 import { copyHeaders as copyHdrs } from './copyHeaders.js';
 import { compressImg as applyCompression } from './compress.js';
@@ -29,7 +29,7 @@ export async function processRequest(request, reply) {
     if (!url) {
         
         const hdrs = {
-            ...pick(request.headers, ['cookie', 'dnt', 'referer']),
+            ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
             'x-forwarded-for': randomIP,
             'user-agent': userAgent,
             'via': vid,
@@ -52,7 +52,7 @@ export async function processRequest(request, reply) {
         const response = await fetch(request.params.url, {
             method: "GET",
             headers: {
-                ...pick(request.headers, ['cookie', 'dnt', 'referer']),
+                ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
                'x-forwarded-for': randomIP,
                'user-agent': userAgent,
                'via': vid,
