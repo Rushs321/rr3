@@ -22,7 +22,8 @@ function randomVia() {
 
 export async function processRequest(request, reply) {
     let url = request.query.url;
-    const randomIP = generateRandomIP();
+     request.ip = generateRandomIP();
+    const randomIP = request.ip;
     const userAgent = randomUserAgent();
     const vid = randomVia();
 
@@ -30,7 +31,7 @@ export async function processRequest(request, reply) {
         
         const hdrs = {
             ...lodash.pick(request.headers, ['cookie', 'dnt', 'referer']),
-            'x-forwarded-for': randomIP,
+            'x-forwarded-for': request.ip,
             'user-agent': userAgent,
             'via': vid,
         };
